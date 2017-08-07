@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import static com.slf4jmigrator.util.Constants.LEVEL_MAPPINGS;
 import static com.slf4jmigrator.util.StringUtils.capitalize;
 
-public class RegexUtils {
+public final class RegexUtils {
 
 	public static final Pattern loggerDeclarationPattern =
 			Pattern.compile("(.*[\\s]+)Logger\\.getLogger\\((\\w+\\.class)(?:\\.\\w+\\(.*\\))?\\);(.*)");

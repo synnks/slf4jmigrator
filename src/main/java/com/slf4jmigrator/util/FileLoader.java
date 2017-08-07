@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-import static com.slf4jmigrator.util.StringUtils.characterCountBeforeExpression;
+import static com.slf4jmigrator.util.StringUtils.nonCommentedCharacterCount;
 
 public final class FileLoader {
 
@@ -27,7 +27,6 @@ public final class FileLoader {
 
 	public static JavaFile readFile(File file) {
 		final JavaFile javaFile = new JavaFile();
-		final String commentRegex = "(//|/\\*+)+";
 
 		int parenthesisBalance = 0;
 		Line previousLine;
@@ -43,8 +42,8 @@ public final class FileLoader {
 				if (parenthesisBalance != 0) {
 					previousLine.setNextLine(currentLine);
 				}
-				parenthesisBalance += characterCountBeforeExpression(content, '(', commentRegex);
-				parenthesisBalance -= characterCountBeforeExpression(content, ')', commentRegex);
+				parenthesisBalance += nonCommentedCharacterCount(content, '(');
+				parenthesisBalance -= nonCommentedCharacterCount(content, ')');
 				javaFile.putInside(currentLine);
 			}
 		} catch (FileNotFoundException e) {
