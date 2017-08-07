@@ -60,7 +60,7 @@ public class RegexUtils {
 
 	private static class Formatter {
 
-		private static final String parameterRegex = "([\\w., ()]+|\\([\\w., ()]+\\?[\\w., ()\"]+:[\\w., ()\"]+\\))";
+		private static final String parameterRegex = ".*[^\"]$";
 		private static final String tokenDelimiter = " ?\\+ ?";
 		private static final String parameterDelimiter = ", ";
 
@@ -76,6 +76,12 @@ public class RegexUtils {
 
 				if (currentToken.matches(parameterRegex)) {
 					parameters.add(currentToken);
+					if (i < tokens.length - 1) {
+						final String nextToken = tokens[i + 1];
+						if (!nextToken.matches(parameterRegex)) {
+							stringBuilder.append("{}");
+						}
+					}
 				} else {
 					stringBuilder.append(currentToken.replaceAll("\"", ""));
 					if (i < tokens.length - 1) {
@@ -88,7 +94,7 @@ public class RegexUtils {
 			}
 			stringBuilder.append("\"");
 			parameters.forEach(parameter -> stringBuilder.append(parameterDelimiter).append(parameter));
-			return stringBuilder.toString();
+			return stringBuilder.toString().replaceAll("(\\{}){2,}", "{}");
 		}
 	}
 }

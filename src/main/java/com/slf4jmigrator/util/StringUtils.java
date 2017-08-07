@@ -6,11 +6,13 @@ public final class StringUtils {
 		return string.substring(0, 1).toUpperCase() + string.substring(1);
 	}
 
-	public static int characterFrequency(String string, char chr) {
+	public static int characterCountBeforeExpression(String string, char chr, String regex) {
 		int count = 0;
-		for (char c : string.toCharArray()) {
-			if (c == chr) {
-				count++;
+		if (!string.matches(regex)) {
+			for (char c : string.split(regex)[0].toCharArray()) {
+				if (c == chr) {
+					count++;
+				}
 			}
 		}
 		return count;
