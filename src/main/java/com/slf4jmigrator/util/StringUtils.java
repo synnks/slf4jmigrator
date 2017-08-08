@@ -16,7 +16,7 @@ public final class StringUtils {
 		final Matcher matcher = commentPattern.matcher(string);
 		String substring = string;
 
-		if (matcher.find() && characterCount(matcher.group(1), '"') % 2 == 0) {
+		if (matcher.find() && nonEscapedCharacterCount(matcher.group(1), '"') % 2 == 0) {
 			substring = matcher.group(1);
 		}
 
@@ -24,11 +24,11 @@ public final class StringUtils {
 	}
 
 	public static int nonStringCharacterCount(String string, char chr) {
-		return characterCount(string, chr, str -> characterCount(str, '"') % 2 == 0);
+		return characterCount(string, chr, str -> nonEscapedCharacterCount(str, '"') % 2 == 0);
 	}
 
-	public static int characterCount(String string, char chr) {
-		return characterCount(string, chr, str -> true);
+	public static int nonEscapedCharacterCount(String string, char chr) {
+		return characterCount(string, chr, str -> str.length() == 0 || str.charAt(str.length() - 1) != '\\');
 	}
 
 	private static int characterCount(String string, char chr, Predicate<String> predicate) {

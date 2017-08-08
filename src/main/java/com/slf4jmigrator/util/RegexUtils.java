@@ -83,7 +83,7 @@ public final class RegexUtils {
 						}
 					}
 				} else {
-					stringBuilder.append(currentToken.replaceAll("\"", ""));
+					stringBuilder.append(currentToken.replaceAll("(?:\\\\)?\"", ""));
 					if (i < tokens.length - 1) {
 						final String nextToken = tokens[i + 1];
 						if (nextToken.matches(parameterRegex)) {
