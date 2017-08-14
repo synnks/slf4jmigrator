@@ -10,7 +10,7 @@ public enum Category {
 	StaticImports("import static .*;", JDKImports),
 	Annotations("@\\w+(?:\\(.*\\))?", StaticImports),
 	ClassName("public class .* \\{", Annotations),
-	JULLoggerDeclarations("\\s*(?:public |protected |private )?(?:final )?static (?:final )?Logger \\w+ = .*\\(.*", null),
+	JULLoggerDeclarations("\\s*(?:public |protected |private )?(?:final )?(?:static )?(?:final )?Logger \\w+ = .*\\(.*", null),
 	JULIsLoggableCalls("\\s*.*\\w+\\.isLoggable\\(.*\\).*", null),
 	LoggingCalls("\\s*.*\\w+\\.(log|fine(?:r|st)?|config|info|warn(?:ing)?|severe|trace|debug|error)\\(.*", null),
 	Other(".*", null);
