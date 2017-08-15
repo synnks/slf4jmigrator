@@ -36,6 +36,7 @@ public class Migrator {
 				resolve(newFile, call, JULLoggingCallPattern, JULLoggingCallMapper);
 				resolve(newFile, call, formattedLoggingCallPattern, formattedLoggingCallMapper);
 				resolve(newFile, call, stringConcatenationLoggingCallPattern, stringConcatenationLoggingCallMapper);
+				resolve(newFile, call, stringFormatLoggingCallPattern, stringFormatLoggingCallMapper);
 			});
 		}
 		return newFile.reconstructFile();
@@ -43,7 +44,7 @@ public class Migrator {
 
 	private static void resolve(JavaFile file, Line line, Pattern pattern, Function<Matcher, String> mapper) {
 		final Matcher matcher = pattern.matcher(line.getContent());
-		if (matcher.find()) {
+		if (matcher.matches()) {
 			final String prefix = matcher.group(1);
 			final String suffix = matcher.group(matcher.groupCount());
 			final String newLine = mapper.apply(matcher);

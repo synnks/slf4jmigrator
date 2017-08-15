@@ -14,15 +14,17 @@ public final class RegexUtils {
 	public static final Pattern loggerDeclarationPattern =
 			Pattern.compile("(.*[\\s]+)Logger\\.getLogger\\((\\w+\\.class)(?:\\.\\w+\\(.*\\))?\\);(.*)");
 	public static final Pattern isLoggableCallPattern =
-			Pattern.compile("(.*[\\s(]+)(\\w+)\\.isLoggable\\((?:Level.)?([A-Z]+)\\)(.*)");
+			Pattern.compile("(.*[\\s(]+)(\\w+)\\.isLoggable\\((?:Level\\.)?([A-Z]+)\\)(.*)");
 	public static final Pattern levelLoggingCallPattern =
-			Pattern.compile("(.*[\\s]+)(\\w+)\\.log\\((?:Level.)?([A-Z]+), (.*)\\);(.*)");
+			Pattern.compile("(.*[\\s]+)(\\w+)\\.log\\((?:Level\\.)?([A-Z]+), (.*)\\);(.*)");
 	public static final Pattern JULLoggingCallPattern =
 			Pattern.compile("(.*[\\s]+)(\\w+)\\.(fine(?:r|st)?|config|info|warning|severe)\\((.*)\\);(.*)");
 	public static final Pattern formattedLoggingCallPattern =
 			Pattern.compile("(.*[\\s]+)(\\w+)\\.(info|warn|trace|debug|error)\\((\".*\\{.+}.*\"), (?:new \\w+\\[]\\{)?([\\w., ()]+)(?:})?\\);(.*)");
 	public static final Pattern stringConcatenationLoggingCallPattern =
 			Pattern.compile("(.*[\\s]+)(\\w+)\\.(info|warn|trace|debug|error)\\((.*\\+.*)\\);(.*)");
+	public static final Pattern stringFormatLoggingCallPattern =
+			Pattern.compile("(.*[\\s]+)(\\w+)\\.(info|warn|trace|debug|error)\\(.*(?:String\\.)?format\\((.*)\\).*\\);(.*)");
 
 	public static final Function<Matcher, String> loggerDeclarationMapper =
 			matcher -> String.format("LoggerFactory.getLogger(%s);",
@@ -57,6 +59,14 @@ public final class RegexUtils {
 									 matcher.group(2),
 									 matcher.group(3),
 									 Formatter.formatWithParameters(matcher.group(4)));
+
+	public static final Function<Matcher, String> stringFormatLoggingCallMapper =
+			matcher -> String.format("%s.%s(%s);",
+									 matcher.group(2),
+									 matcher.group(3),
+									 matcher.group(4)
+											 .replaceAll("%n", "\\\n")
+											 .replaceAll("%[a-zA-Z]", "{}"));
 
 	private static class Formatter {
 
