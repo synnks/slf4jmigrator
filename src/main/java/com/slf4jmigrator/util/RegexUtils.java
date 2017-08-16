@@ -24,7 +24,7 @@ public final class RegexUtils {
 	public static final Pattern stringConcatenationLoggingCallPattern =
 			Pattern.compile("(.*[\\s]+)(\\w+)\\.(info|warn|trace|debug|error)\\((.*\\+.*)\\);(.*)");
 	public static final Pattern stringFormatLoggingCallPattern =
-			Pattern.compile("(.*[\\s]+)(\\w+)\\.(info|warn|trace|debug|error)\\(.*(?:String\\.)?format\\((.*)\\).*\\);(.*)");
+			Pattern.compile("(.*[\\s]+)(\\w+)\\.(info|warn|trace|debug|error)\\((?:String\\.)?format\\((.*)\\)(.*)\\);(.*)");
 
 	public static final Function<Matcher, String> loggerDeclarationMapper =
 			matcher -> String.format("LoggerFactory.getLogger(%s);",
@@ -61,12 +61,13 @@ public final class RegexUtils {
 									 Formatter.formatWithParameters(matcher.group(4)));
 
 	public static final Function<Matcher, String> stringFormatLoggingCallMapper =
-			matcher -> String.format("%s.%s(%s);",
+			matcher -> String.format("%s.%s(%s%s);",
 									 matcher.group(2),
 									 matcher.group(3),
 									 matcher.group(4)
-											 .replaceAll("%n", "\\\n")
-											 .replaceAll("%[a-zA-Z]", "{}"));
+											 .replaceAll("%n", "\\\\n")
+											 .replaceAll("%[a-zA-Z]", "{}"),
+									 matcher.group(5));
 
 	private static class Formatter {
 
